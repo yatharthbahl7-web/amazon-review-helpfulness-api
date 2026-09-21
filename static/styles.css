@@ -1,0 +1,163 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f7fa;
+    color: #1f2937;
+}
+
+.container {
+    width: 90%;
+    max-width: 760px;
+    margin: 60px auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    margin-bottom: 12px;
+    font-size: 34px;
+}
+
+.header p {
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+.card {
+    background: white;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow:
+        0 8px 30px
+        rgba(0, 0, 0, 0.08);
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 20px;
+}
+
+label span {
+    color: #9ca3af;
+    font-weight: normal;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+}
+
+textarea {
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #4b5563;
+}
+
+button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #111827;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.result {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.result-heading {
+    margin-bottom: 5px;
+    color: #6b7280;
+}
+
+.result h2 {
+    margin-top: 0;
+    font-size: 28px;
+}
+
+.probability-section {
+    margin-top: 25px;
+}
+
+.probability-row {
+    margin-bottom: 20px;
+}
+
+.probability-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.progress {
+    width: 100%;
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #111827;
+    width: 0;
+    transition: width 0.5s ease;
+}
+
+.loading {
+    margin-top: 25px;
+    text-align: center;
+    color: #6b7280;
+}
+
+.error {
+    margin-top: 20px;
+    padding: 12px;
+    background: #fee2e2;
+    border-radius: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+.footer {
+    margin-top: 25px;
+    text-align: center;
+    color: #9ca3af;
+    font-size: 14px;
+}
