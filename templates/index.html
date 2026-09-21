@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Amazon Review Helpfulness Classifier
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="/static/styles.css"
+    >
+</head>
+
+
+<body>
+
+    <main class="container">
+
+        <div class="header">
+
+            <h1>
+                Amazon Review Helpfulness Classifier
+            </h1>
+
+            <p>
+                Enter a product review and the machine-learning
+                model will estimate whether the review is likely
+                to be considered helpful.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <form id="review-form">
+
+                <label for="summary">
+                    Review Title
+                    <span>(optional)</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="summary"
+                    placeholder="e.g. Great product"
+                >
+
+
+                <label for="review">
+                    Review
+                </label>
+
+                <textarea
+                    id="review"
+                    rows="8"
+                    placeholder="Type or paste the product review here..."
+                    required
+                ></textarea>
+
+
+                <button type="submit" id="predict-button">
+                    Analyze Review
+                </button>
+
+            </form>
+
+
+            <div
+                id="loading"
+                class="loading hidden"
+            >
+                Analyzing review...
+            </div>
+
+
+            <div
+                id="result"
+                class="result hidden"
+            >
+
+                <p class="result-heading">
+                    Prediction
+                </p>
+
+                <h2 id="prediction-label"></h2>
+
+
+                <div class="probability-section">
+
+                    <div class="probability-row">
+
+                        <div class="probability-label">
+                            <span>Helpful</span>
+                            <span id="helpful-percentage"></span>
+                        </div>
+
+                        <div class="progress">
+                            <div
+                                id="helpful-bar"
+                                class="progress-bar"
+                            ></div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="probability-row">
+
+                        <div class="probability-label">
+                            <span>Not Helpful</span>
+                            <span id="not-helpful-percentage"></span>
+                        </div>
+
+                        <div class="progress">
+                            <div
+                                id="not-helpful-bar"
+                                class="progress-bar"
+                            ></div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="error"
+                class="error hidden"
+            ></div>
+
+        </div>
+
+
+        <p class="footer">
+            TF-IDF + SGDClassifier • FastAPI • Docker
+        </p>
+
+    </main>
+
+
+    <script>
+
+        const form =
+            document.getElementById("review-form");
+
+        const result =
+            document.getElementById("result");
+
+        const loading =
+            document.getElementById("loading");
+
+        const errorBox =
+            document.getElementById("error");
+
+        const button =
+            document.getElementById("predict-button");
+
+
+        form.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+                result.classList.add("hidden");
+                errorBox.classList.add("hidden");
+                loading.classList.remove("hidden");
+
+                button.disabled = true;
+
+
+                const summary =
+                    document.getElementById(
+                        "summary"
+                    ).value;
+
+                const text =
+                    document.getElementById(
+                        "review"
+                    ).value;
+
+
+                try {
+
+                    const response = await fetch(
+                        "/predict",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                summary: summary,
+                                text: text
+                            })
+                        }
+                    );
+
+
+                    if (!response.ok) {
+                        throw new Error(
+                            "Prediction request failed."
+                        );
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    const helpful =
+                        data.probability_helpful * 100;
+
+                    const notHelpful =
+                        data.probability_not_helpful * 100;
+
+
+                    document.getElementById(
+                        "prediction-label"
+                    ).textContent =
+                        data.label;
+
+
+                    document.getElementById(
+                        "helpful-percentage"
+                    ).textContent =
+                        helpful.toFixed(1) + "%";
+
+
+                    document.getElementById(
+                        "not-helpful-percentage"
+                    ).textContent =
+                        notHelpful.toFixed(1) + "%";
+
+
+                    document.getElementById(
+                        "helpful-bar"
+                    ).style.width =
+                        helpful + "%";
+
+
+                    document.getElementById(
+                        "not-helpful-bar"
+                    ).style.width =
+                        notHelpful + "%";
+
+
+                    result.classList.remove(
+                        "hidden"
+                    );
+
+                }
+
+                catch (error) {
+
+                    errorBox.textContent =
+                        "Something went wrong while analyzing the review.";
+
+                    errorBox.classList.remove(
+                        "hidden"
+                    );
+
+                }
+
+                finally {
+
+                    loading.classList.add(
+                        "hidden"
+                    );
+
+                    button.disabled = false;
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
